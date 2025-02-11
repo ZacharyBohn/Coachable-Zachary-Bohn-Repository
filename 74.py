@@ -1,6 +1,6 @@
 class Solution:
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
-        # outter binary search to find correct row
+        # outer binary search to find correct row
         row_index = -1
         left, right = 0, len(matrix) - 1
         while left <= right:
