@@ -4,28 +4,28 @@ class Solution:
         row_index = -1
         left, right = 0, len(matrix) - 1
         while left <= right:
-            i = left + ((right - left) // 2)
-            value = matrix[i][0]
+            mid = left + ((right - left) // 2)
+            value = matrix[mid][0]
             if value == target:
                 return True
             elif value < target:
-                if matrix[i][-1] < target:
-                    left = i + 1
+                if matrix[mid][-1] < target:
+                    left = mid + 1
                 else:
-                    row_index = i
+                    row_index = mid
                     break
             elif value > target:
-                right = i - 1
+                right = mid - 1
         # inner binary search
         row = matrix[row_index]
         left, right = 0, len(row) - 1
         while left <= right:
-            i = left + ((right - left) // 2)
-            value = row[i]
+            mid = left + ((right - left) // 2)
+            value = row[mid]
             if value == target:
                 return True
             elif value < target:
-                left = i + 1
+                left = mid + 1
             elif value > target:
-                right = i - 1
+                right = mid - 1
         return False
