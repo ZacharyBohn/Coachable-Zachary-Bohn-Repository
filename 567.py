@@ -1,15 +1,13 @@
 from string import ascii_lowercase
+from collections import defaultdict
 
 class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
         if len(s1) > len(s2):
             return False
 
-        s1_counts = {}
-        window_counts = {}
-        for x in ascii_lowercase:
-            s1_counts[x] = 0
-            window_counts[x] = 0
+        s1_counts = defaultdict(int)
+        window_counts = defaultdict(int)
         for x in s1:
             s1_counts[x] += 1
         # doing len(s1)-1 here might be a bit weird?
@@ -27,7 +25,7 @@ class Solution:
             left += 1
         return False
 
-    def isEqual(self, s1_counts, window_counts):
+    def isEqual(self, s1_counts: int, window_counts: dict[str, int]):
         if len(s1_counts) != len(window_counts):
             return False
         for x in s1_counts:
