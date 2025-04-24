@@ -2,7 +2,7 @@ from collections import defaultdict
 
 class Solution:
     def characterReplacement(self, s: str, k: int) -> int:
-        counts = defaultdict(lambda: 0)
+        counts = defaultdict(int)
         left = 0
         max_len = 0
         for right in range(len(s)):
