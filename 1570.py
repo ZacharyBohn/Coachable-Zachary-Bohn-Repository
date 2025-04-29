@@ -2,16 +2,23 @@ class SparseVector:
     def __init__(self, nums: List[int]):
         self.hashmap = {}
         for i in range(len(nums)):
-            num = nums[i]
-            if num != 0:
-                self.hashmap[i] = num
+            if nums[i] != 0:
+                self.hashmap[i] = nums[i]
 
     # Return the dotProduct of two sparse vectors
     def dotProduct(self, vec: 'SparseVector') -> int:
         total = 0
-        for i, num in self.hashmap.items():
-            if i in vec.hashmap:
-                total += num * vec.hashmap[i]
+        smaller_vec = None
+        larger_vec = None
+        if len(self.hashmap) <= vec.hashmap:
+            smaller_vec = self
+            larger_vec = vec
+        else:
+            smaller_vec = vec
+            larger_vec = self
+        for i, num in smaller_vec.hashmap.items():
+            if i in larger_vec.hashmap:
+                total += num * larger_vec.hashmap[i]
         return total
 
 # Your SparseVector object will be instantiated and called as such:
