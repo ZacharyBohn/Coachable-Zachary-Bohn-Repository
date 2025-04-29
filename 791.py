@@ -2,13 +2,13 @@ from collections import defaultdict
 
 class Solution:
     def customSortString(self, order: str, s: str) -> str:
-        hashmap = defaultdict(int)
+        char_counts = defaultdict(int)
         for char in s:
-            hashmap[char] += 1
+            char_counts[char] += 1
         answer = ''
         for char in order:
-            answer += char * hashmap[char]
-        for char,count in hashmap.items():
+            answer += char * char_counts[char]
+        for char,count in char_counts.items():
             if char not in order:
                 answer += char * count
         return answer
