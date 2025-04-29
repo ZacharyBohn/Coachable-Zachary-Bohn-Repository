@@ -9,4 +9,5 @@ class Solution:
         if n % 2 == 0:
             res = self.myPow(x, n // 2)
             return res * res
-        return self.myPow(x, n-1) * x
+        res = self.myPow(x, n // 2)
+        return res * res * x
