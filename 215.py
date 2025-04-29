@@ -1,6 +1,6 @@
 import heapq
 
-# Runtime O(n log n)
+# Runtime O(n log k)
 # Space O(k)
 class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:
