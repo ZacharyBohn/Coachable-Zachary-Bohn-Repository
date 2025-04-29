@@ -5,13 +5,13 @@ class Solution:
         char_counts = defaultdict(int)
         for char in s:
             char_counts[char] += 1
-        answer = ''
+        answer = []
         for char in order:
-            answer += char * char_counts[char]
+            answer.append(char * char_counts[char])
         for char,count in char_counts.items():
             if char not in order:
-                answer += char * count
-        return answer
+                answer.append(char * count)
+        return ''.join(answer)
 
 '''
 For a string, dab
