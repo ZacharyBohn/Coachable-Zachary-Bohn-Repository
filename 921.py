@@ -15,7 +15,7 @@ Main case:
 balance the number of opens and closes
 
 Edge case 1:
-)())(
+)(
 number of opens / closes are equal,
 but answer should be two
 
