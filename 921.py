@@ -1,3 +1,5 @@
+# Runtime: O(n)
+# Space: O(1)
 class Solution:
     def minAddToMakeValid(self, s: str) -> int:
         inbalances = 0
