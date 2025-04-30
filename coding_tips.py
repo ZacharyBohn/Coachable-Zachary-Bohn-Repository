@@ -77,25 +77,67 @@ def insertion_sort():
 	pass
 
 # Tree Traversals
+#
 # breadth first / level-order
 # there is only one kind of breadth first, which is level order
-# uses a queue to process all nodes at the current level
-# before moving onto the children (from the queue)
-def breadth_first():
-	pass
+#
+# Binary tree BFS
+def bfs(root):
+	queue = deque([root])
+	while queue:
+		node = queue.popleft()
+		# process node
+		if node.left:
+			queue.append(node.left)
+		if node.right:
+			queue.append(node.right)
+
+# Graph BFS
+def bfs(root):
+	q = deque([start])
+	# visit / visited is perhaps a poor label
+	# something like enqueued would be better
+	# since items in this set have not yet been
+	# processed, but they have been enqueued.
+	# However, this should be used to keep
+	# convention.
+	visit = set([start])
+	while q:
+		node = q.popleft()
+		# process node
+		for neighbor in neighbors:
+			# node could have neighbors that are
+			# neighbors of each other. This guards
+			# against adding any one node more than
+			# once.
+			if neighbor in visited:
+				continue
+			q.append(neighbor)
+			visit.add(neighbor)
 
 # Below are all depth first searches
-def post_order_dfs():
-	pass
+def dfs(root, visit=None):
+	if not visit:
+		visit = set()
+	visit.add(root)
+	# process node here for pre-order
+	# type traversal
+	for neighbor in neighbors:
+		if neighbor in visit:
+			continue
+		dfs(neighbor, visit)
+	# process node here for post-order
 
-def pre_order_dfs():
-	pass
+# Binary tree in-order DFS
+def inorder_dfs(root):
+	if not root:
+		return
+	inorder_dfs(root.left)
+	# process node here
+	inorder_dfs(root.right)
 
-def post_order_dfs():
-	pass
 
-
-# Whenever there are two types of data -> greedy
+# Whenever there are two types of data -> think greedy algorithm.
 # Can determine if the problem can be greedy; by trying to give an example
 # where a greedy algorithm won’t work. If you can’t think of any examples,
 # then greedy will likely work.
