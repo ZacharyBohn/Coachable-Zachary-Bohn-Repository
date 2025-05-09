@@ -18,10 +18,10 @@ class Solution:
         return answer
     
     def genKey(self, string: str) -> str:
-        adjustment = ord(string[0])
+        delta = ord(string[0])
         uniform = []
         for c in string:
-            i = (ord(c) - adjustment) % 26
+            i = (ord(c) - delta) % 26
             uniform.append(ascii_lowercase[i])
         return ''.join(uniform)
 
