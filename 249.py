@@ -1,11 +1,9 @@
 from collections import defaultdict
-from string import ascii_lowercase
 
-# Runtime: O(n)
+# Runtime: O(n + m)
 # Space: O(n)
-# n = number of characters in strings
-#
-# Time to complete: 35:00
+# n = number of strings
+# m = number of characters
 class Solution:
     def groupStrings(self, strings: List[str]) -> List[List[str]]:
         groups = defaultdict(list)
@@ -13,61 +11,52 @@ class Solution:
             key = self.genKey(string)
             groups[key].append(string)
         answer = []
-        for key,item in groups.items():
-            answer.append(item)
+        for string_list in groups.values():
+            answer.append(string_list)
         return answer
-    
+
     def genKey(self, string: str) -> str:
-        delta = ord(string[0])
-        uniform = []
+        if len(string) == 0:
+            return ""
+        delta = ord(string[0]) - ord('a')
+        int_format = []
         for c in string:
-            i = (ord(c) - delta) % 26
-            uniform.append(ascii_lowercase[i])
-        return ''.join(uniform)
+            value = ord('a') + ((ord(c) - delta) % 26)
+            int_format.append(chr(value))
+        return ''.join(int_format)
+        
 
 '''
-Can think of the problem as numbers instead of letters.
-should make things a bit simpler.
+Plan:
+Convert to a common format
+like abc = 123
+bcd = 234 = 123
+convert to numbers
+shift the sequence until all numbers are 1
+create a map of common format to list of strings
+return the lists from that map
 
-abc -> 1,2,3
+How to convert to a common format?
+Let's use 0 based common format
+ord('a') = some number
+h = 81
+ord('h') - ord('a') = 8
+convert a to 0
+convert z to 0
+ord z - ord a = z in base 0 format
+that's easy
 
-Need a uniform standard that all string can fit into.
-abc -> 1,2,3
-xyz -> 24,25,26 -> 1,2,3
+now converting the other numbers is harder
+just mod 26 them
 
-Since the window can slide, a standard could be:
-differences between characters
-abc -> null, +1, +1
-xyz -> null, +1, +1
+How to ensure that 012 is not truncated to 12?
+just add 1 to the beginning?
+or keep them as strings?
+keep them as strings
 
-But we need to store the standard representation of the strings
-in a way that we can hash it, since we will be using a hashmap
-in order to compare matches in O(1) time.
+let's not convert them to 0 base
+ord('h') = something like 104
+delta = ord h - ord a = 8
 
-could make the first letter always a, then adjust the other letters
-to be valid for that string.
-abc -> abc
-xyz -> abc
-fhi -> acd
-
-using that as a key will be easy.
-
-ok, so we need a function to convert a string to the common
-string format
-then we loop through the given strings, and keep placing
-them into a hashmap using that given string as a key.
-can use a defaultdict
-loop through the hashmap to create a list.
-
-a = 97
-f = 97 - 97 = 0 
-
-bcd
- 98 99 100
--97 97 97
-=
-1 2 3
-
-How to make sure a-z is only outputted?
-use string.ascii_lowercase
+new_char = ord a + (ord old char - delta) mod 26?
 '''
