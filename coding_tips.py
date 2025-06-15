@@ -53,11 +53,15 @@ y = ['hello', 'there']
 
 ''.join(y) # return 'hellothere'
 
+'hi' in 'this' # returns True
+'test test test'.count('test') # returns 3
+
 # quick access to string lists
 # placing them into a set guarentees O(1) lookup time
 # though it is often unnecessary
 import string
 LOWERS = set(string.ascii_lowercase)
+UPPERS = set(string.ascii_uppercase)
 DIGITS = set(string.digits)
 LETTERS = set(string.ascii_letters)
 PUNCTUATIONS = set(string.punctuation)
