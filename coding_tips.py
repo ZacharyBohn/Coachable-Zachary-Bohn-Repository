@@ -136,6 +136,14 @@ def inorder_dfs(root):
 	# process node here
 	inorder_dfs(root.right)
 
+# Dijkstra's Algorithm
+#
+# Used for finding the shortest path
+# between two nodes in a weighted graph.
+# It's basically BFS with 2 differences:
+# 1. Uses a distances dictionary
+# 2. The queue is a heap.
+
 
 # Whenever there are two types of data -> think greedy algorithm.
 # Can determine if the problem can be greedy; by trying to give an example
