@@ -7,34 +7,34 @@ from collections import deque
 #
 # Time to complete: 17:20
 class Solution:
-    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
-        M, N = len(grid[0]), len(grid)
-        visited = set()
-        max_size = 0
-        for y in range(N):
-            for x in range(M):
-                if grid[y][x] and (y,x) not in visited:
-                    size = self.bfs(grid, visited, x, y, M, N)
-                    max_size = max(max_size, size)
-        return max_size
+	def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
+		M, N = len(grid[0]), len(grid)
+		visited = set()
+		max_size = 0
+		for y in range(N):
+			for x in range(M):
+				if grid[y][x] and (y,x) not in visited:
+					size = self.bfs(grid, visited, x, y, M, N)
+					max_size = max(max_size, size)
+		return max_size
 
-    
-    def bfs(self, grid, visited, x, y, M, N) -> int:
-        q = deque([(y,x)])
-        visited.add((y,x))
-        size = 1
-        while q:
-            y, x = q.popleft()
-            for dy, dx in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
-                ny, nx = y + dy, x + dx
-                if (0 <= ny < N and 0 <= nx < M) and \
-                    grid[ny][nx] and \
-                    (ny,nx) not in visited:
-                    q.append((ny,nx))
-                    visited.add((ny,nx))
-                    size += 1
-        return size
-        
+	
+	def bfs(self, grid, visited, x, y, M, N) -> int:
+		q = deque([(y,x)])
+		visited.add((y,x))
+		size = 1
+		while q:
+			y, x = q.popleft()
+			size += 1
+			for dy, dx in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
+				ny, nx = y + dy, x + dx
+				if (0 <= ny < N and 0 <= nx < M) and \
+					grid[ny][nx] and \
+					(ny,nx) not in visited:
+					q.append((ny,nx))
+					visited.add((ny,nx))
+		return size
+		
 
 '''
 think in general terms first.
