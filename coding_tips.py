@@ -157,6 +157,8 @@ def directed_graph_has_cycle(adj) -> bool:
 	# the visited set will be used to unnecessary work
 	# is not performed.
 	for node in adj:
+		if node in visited:
+			continue
 		if directed_graph_has_cycle_helper(node, adj, path, visited):
 			return True
 	
