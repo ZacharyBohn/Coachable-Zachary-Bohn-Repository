@@ -225,11 +225,11 @@ def dijkstra_shortest_paths(graph, start_node) -> Dict[str, int]:
 	shortest_distance = {node: float('inf') for node in graph}
 
 	# Priority queue of (distance_from_start, node_to_visit)
-	unvisited_nodes = [(0, start_node)]
+	frontier = [(0, start_node)]
 	shortest_distance[start_node] = 0
 
-	while unvisited_nodes:
-		current_distance, current_node = heapq.heappop(unvisited_nodes)
+	while frontier:
+		current_distance, current_node = heapq.heappop(frontier)
 
 		# Ignore if we already found a shorter path to this node
 		if current_distance > shortest_distance[current_node]:
@@ -242,7 +242,7 @@ def dijkstra_shortest_paths(graph, start_node) -> Dict[str, int]:
 				continue
 			
 			shortest_distance[neighbor_node] = distance_via_current
-			heapq.heappush(unvisited_nodes, (distance_via_current, neighbor_node))
+			heapq.heappush(frontier, (distance_via_current, neighbor_node))
 
 	return shortest_distance
 
