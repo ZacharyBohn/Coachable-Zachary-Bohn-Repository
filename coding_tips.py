@@ -78,6 +78,12 @@ def insertion_sort():
 
 # Tree Traversals
 #
+# When traversing graphs, this template should be followed
+# unless there is a specific reason not to:
+# 1. Node Evaluation (select next node)
+# 2. Node Processing (perform work on selected node)
+# 3. Graph Traversal (add neighbors to queue / stack)
+#
 # breadth first / level-order
 # there is only one kind of breadth first, which is level order
 #
