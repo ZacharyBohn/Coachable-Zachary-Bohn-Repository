@@ -168,8 +168,7 @@ def directed_graph_has_cycle_helper(node, adj, path, visited) -> bool:
 		return True
 	if node in visited:
 		# already checked this path
-		# or are in the process of checking
-		# this path
+		# and no cycles were detected.
 		return False
 	
 	path.add(node)
@@ -186,7 +185,13 @@ def directed_graph_has_cycle_helper(node, adj, path, visited) -> bool:
 adj = defaultdict(list)
 def undirected_graph_has_cycle(adj) -> bool:
 	visited = set()
+	# this for loop is only necessary since the graph
+	# may contain multiple components
 	for node in adj:
+		if node in visited:
+			# this node's component has been proven
+			# to not be in a cycle.
+			continue
 		if undirected_graph_has_cycle_helper(node, None, adj, visited):
 			return True
 	return False
