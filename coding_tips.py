@@ -194,9 +194,10 @@ def undirected_graph_has_cycle(adj) -> bool:
 def undirected_graph_has_cycle_helper(node, parent, adj, visited) -> bool:
 	visited.add(node)
 	for neighbor in adj[node]:
+		if neighbor == parent:
+			# ignore parent-child relationship
+			continue
 		if neighbor in visited:
-			if neighbor == parent:
-				continue
 			# we've seen a node twice (barring child-parent
 			# relationship), which means there is a cycle
 			return True
@@ -207,11 +208,32 @@ def undirected_graph_has_cycle_helper(node, parent, adj, visited) -> bool:
 
 # Dijkstra's Algorithm
 #
-# Used for finding the shortest path
+# For finding the shortest path
 # between two nodes in a weighted graph.
-# It's basically BFS with 2 differences:
-# 1. Uses a distances dictionary
-# 2. The queue is a heap.
+adj: Dict[str, int] = defaultdict(list)
+def dijkstra_shortest_paths(graph, start_node) -> Dict[str, int]:
+    # Shortest known distance from start_node to each node
+    shortest_distance = {node: float('inf') for node in graph}
+    shortest_distance[start_node] = 0
+
+    # Priority queue of (distance_from_start, node_to_visit)
+    unvisited_nodes = [(0, start_node)]
+
+    while unvisited_nodes:
+        current_distance, current_node = heapq.heappop(unvisited_nodes)
+
+        # Ignore if we already found a shorter path to this node
+        if current_distance > shortest_distance[current_node]:
+            continue
+
+        for neighbor_node, edge_weight in graph[current_node]:
+            distance_via_current = current_distance + edge_weight
+
+            if distance_via_current < shortest_distance[neighbor_node]:
+                shortest_distance[neighbor_node] = distance_via_current
+                heapq.heappush(unvisited_nodes, (distance_via_current, neighbor_node))
+
+    return shortest_distance
 
 
 # Whenever there are two types of data -> think greedy algorithm.
