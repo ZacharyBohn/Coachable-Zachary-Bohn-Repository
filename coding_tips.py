@@ -192,6 +192,8 @@ def undirected_graph_has_cycle(adj) -> bool:
 			# this node's component has been proven
 			# to not be in a cycle.
 			continue
+		# this helper function will visit every node
+		# of this node's component.
 		if undirected_graph_has_cycle_helper(node, None, adj, visited):
 			return True
 	return False
@@ -217,28 +219,30 @@ def undirected_graph_has_cycle_helper(node, parent, adj, visited) -> bool:
 # between two nodes in a weighted graph.
 adj: Dict[str, int] = defaultdict(list)
 def dijkstra_shortest_paths(graph, start_node) -> Dict[str, int]:
-    # Shortest known distance from start_node to each node
-    shortest_distance = {node: float('inf') for node in graph}
-    shortest_distance[start_node] = 0
+	# Shortest known distance from start_node to each node
+	shortest_distance = {node: float('inf') for node in graph}
 
-    # Priority queue of (distance_from_start, node_to_visit)
-    unvisited_nodes = [(0, start_node)]
+	# Priority queue of (distance_from_start, node_to_visit)
+	unvisited_nodes = [(0, start_node)]
+	shortest_distance[start_node] = 0
 
-    while unvisited_nodes:
-        current_distance, current_node = heapq.heappop(unvisited_nodes)
+	while unvisited_nodes:
+		current_distance, current_node = heapq.heappop(unvisited_nodes)
 
-        # Ignore if we already found a shorter path to this node
-        if current_distance > shortest_distance[current_node]:
-            continue
+		# Ignore if we already found a shorter path to this node
+		if current_distance > shortest_distance[current_node]:
+			continue
 
-        for neighbor_node, edge_weight in graph[current_node]:
-            distance_via_current = current_distance + edge_weight
+		for neighbor_node, edge_weight in graph[current_node]:
+			distance_via_current = current_distance + edge_weight
 
-            if distance_via_current < shortest_distance[neighbor_node]:
-                shortest_distance[neighbor_node] = distance_via_current
-                heapq.heappush(unvisited_nodes, (distance_via_current, neighbor_node))
+			if distance_via_current > shortest_distance[neighbor_node]:
+				continue
+			
+			shortest_distance[neighbor_node] = distance_via_current
+			heapq.heappush(unvisited_nodes, (distance_via_current, neighbor_node))
 
-    return shortest_distance
+	return shortest_distance
 
 
 # Whenever there are two types of data -> think greedy algorithm.
