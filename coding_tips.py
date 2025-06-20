@@ -116,17 +116,18 @@ def bfs(root):
 			visit.add(neighbor)
 
 # Below are all depth first searches
-def dfs(root, visit=None):
-	if not visit:
-		visit = set()
+def dfs(root, visit, graph):
 	visit.add(root)
 	# process node here for pre-order
 	# type traversal
-	for neighbor in neighbors:
+	for neighbor in graph[root]:
 		if neighbor in visit:
 			continue
 		dfs(neighbor, visit)
 	# process node here for post-order
+#
+# call this function with:
+dfs(root, set())
 
 # Binary tree in-order DFS
 def inorder_dfs(root):
@@ -135,6 +136,68 @@ def inorder_dfs(root):
 	inorder_dfs(root.left)
 	# process node here
 	inorder_dfs(root.right)
+
+# TODO: update these if necessary to ensure that they
+# follow Tim's graph template.
+
+# assume the graph is an adjacency list
+adj = defaultdict(list)
+def directed_graph_has_cycle(adj) -> bool:
+	visited = set()
+	path = set()
+
+	# to call this for every node in the graph
+	# because there may be more than one component
+	# the visited set will be used to unnecessary work
+	# is not performed.
+	for node in adj:
+		if directed_graph_has_cycle_helper(node, adj, path, visited):
+			return True
+	
+	return False
+
+def directed_graph_has_cycle_helper(node, adj, path, visited) -> bool:
+	if node in path:
+		# cycle detected
+		return True
+	if node in visited:
+		# already checked this path
+		# or are in the process of checking
+		# this path
+		return False
+	
+	path.add(node)
+	visited.add(node)
+
+	for neighbor in adj[node]:
+		if directed_graph_has_cycle_helper(neighbor, adj, path, visited):
+			return True
+	
+	path.remove(node)
+	return False
+
+# assume the graph is an adjacency list
+adj = defaultdict(list)
+def undirected_graph_has_cycle(adj) -> bool:
+	visited = set()
+	for node in adj:
+		if undirected_graph_has_cycle_helper(node, None, adj, visited):
+			return True
+	return False
+
+def undirected_graph_has_cycle_helper(node, parent, adj, visited) -> bool:
+	visited.add(node)
+	for neighbor in adj[node]:
+		if neighbor in visited:
+			if neighbor == parent:
+				continue
+			# we've seen a node twice (barring child-parent
+			# relationship), which means there is a cycle
+			return True
+		if undirected_graph_has_cycle_helper(neighbor, node, adj, visited):
+			return True
+	return False
+
 
 # Dijkstra's Algorithm
 #
