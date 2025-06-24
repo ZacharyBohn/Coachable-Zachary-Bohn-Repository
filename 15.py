@@ -36,7 +36,7 @@ class Solution1:
         return answers
 
 # better solution
- class Solution2:
+class Solution2:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
         solutions = set()
         counts = {}
