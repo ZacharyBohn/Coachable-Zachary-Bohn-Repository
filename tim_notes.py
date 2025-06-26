@@ -112,7 +112,7 @@ def prims(adj):
 		#traversal
 		for nei, n_weight in adj[node]:
 			if nei in visited:
-			datastructure.append((n_weight, nei, node))
+				heap.append((n_weight, nei, node))
 
 	return edgelist
 
@@ -175,3 +175,30 @@ def top_sort2(adj):
 			q.append(neighbor)
 
 	return top_order
+
+
+# this template is very generic
+# and can accomodate the max size optimization
+#
+# window can be invalid sometimes
+# if it's contracted to size 1
+#
+# pay attention to order of operations
+#
+# left processing is ONLY for subtracting data
+# right processing is ONLY adding
+#
+# 
+def slidingwindow(arr):
+  l = 0
+  
+  for r in len(arr):
+    # right pointer processing part 1
+
+    while some condition to contract:
+      #left pointer Processing part 1 (probably clean up)
+      l += 1
+      #left pointer processing part 2
+    
+    # right pointer processing part 2
+    
