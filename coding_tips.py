@@ -63,6 +63,24 @@ LETTERS = set(string.ascii_letters)
 PUNCTUATIONS = set(string.punctuation)
 WHITESPACES = set(string.whitespace)
 
+# Cypher / encryption style problems.
+#
+# Use these 3 steps to keep ints between a - z
+# or between A - Z
+# -Bring down to base 0
+# -Perform modulo
+# -Bring back up to base ord('a'), ie 97
+# in implementation this is
+# value = ord(char) - ord('a')
+# value %= 26
+# new_char = chr(value + ord('a'))
+#
+# ord('a') = 97
+# the next 25 lowercase letters follow
+#
+# ord('A') = 65
+# the next 25 uppercase letters follow
+
 # Sorting
 def quick_sort():
 	pass
@@ -77,6 +95,12 @@ def insertion_sort():
 	pass
 
 # Tree Traversals
+#
+# When traversing graphs, this template should be followed
+# unless there is a specific reason not to:
+# 1. Node Evaluation (select next node)
+# 2. Node Processing (perform work on selected node)
+# 3. Graph Traversal (add neighbors to queue / stack)
 #
 # breadth first / level-order
 # there is only one kind of breadth first, which is level order
@@ -116,17 +140,18 @@ def bfs(root):
 			visit.add(neighbor)
 
 # Below are all depth first searches
-def dfs(root, visit=None):
-	if not visit:
-		visit = set()
+def dfs(root, visit, graph):
 	visit.add(root)
 	# process node here for pre-order
 	# type traversal
-	for neighbor in neighbors:
+	for neighbor in graph[root]:
 		if neighbor in visit:
 			continue
 		dfs(neighbor, visit)
 	# process node here for post-order
+#
+# call this function with:
+dfs(root, set())
 
 # Binary tree in-order DFS
 def inorder_dfs(root):
@@ -136,13 +161,108 @@ def inorder_dfs(root):
 	# process node here
 	inorder_dfs(root.right)
 
+# TODO: update these if necessary to ensure that they
+# follow Tim's graph template.
+
+# assume the graph is an adjacency list
+adj = defaultdict(list)
+def directed_graph_has_cycle(adj) -> bool:
+	visited = set()
+	path = set()
+
+	# to call this for every node in the graph
+	# because there may be more than one component
+	# the visited set will be used to unnecessary work
+	# is not performed.
+	for node in adj:
+		if node in visited:
+			continue
+		if directed_graph_has_cycle_helper(node, adj, path, visited):
+			return True
+	
+	return False
+
+def directed_graph_has_cycle_helper(node, adj, path, visited) -> bool:
+	if node in path:
+		# cycle detected
+		return True
+	if node in visited:
+		# already checked this path
+		# and no cycles were detected.
+		return False
+	
+	path.add(node)
+	visited.add(node)
+
+	for neighbor in adj[node]:
+		if directed_graph_has_cycle_helper(neighbor, adj, path, visited):
+			return True
+	
+	path.remove(node)
+	return False
+
+# assume the graph is an adjacency list
+adj = defaultdict(list)
+def undirected_graph_has_cycle(adj) -> bool:
+	visited = set()
+	# this for loop is only necessary since the graph
+	# may contain multiple components
+	for node in adj:
+		if node in visited:
+			# this node's component has been proven
+			# to not be in a cycle.
+			continue
+		# this helper function will visit every node
+		# of this node's component.
+		if undirected_graph_has_cycle_helper(node, None, adj, visited):
+			return True
+	return False
+
+def undirected_graph_has_cycle_helper(node, parent, adj, visited) -> bool:
+	visited.add(node)
+	for neighbor in adj[node]:
+		if neighbor == parent:
+			# ignore parent-child relationship
+			continue
+		if neighbor in visited:
+			# we've seen a node twice (barring child-parent
+			# relationship), which means there is a cycle
+			return True
+		if undirected_graph_has_cycle_helper(neighbor, node, adj, visited):
+			return True
+	return False
+
+
 # Dijkstra's Algorithm
 #
-# Used for finding the shortest path
+# For finding the shortest path
 # between two nodes in a weighted graph.
-# It's basically BFS with 2 differences:
-# 1. Uses a distances dictionary
-# 2. The queue is a heap.
+adj: Dict[str, int] = defaultdict(list)
+def dijkstra_shortest_paths(graph, start_node) -> Dict[str, int]:
+	# Shortest known distance from start_node to each node
+	shortest_distance = {node: float('inf') for node in graph}
+
+	# Priority queue of (distance_from_start, node_to_visit)
+	frontier = [(0, start_node)]
+	shortest_distance[start_node] = 0
+
+	while frontier:
+		current_distance, current_node = heapq.heappop(frontier)
+
+		# Ignore if we already found a shorter path to this node
+		if current_distance > shortest_distance[current_node]:
+			continue
+
+		for neighbor_node, edge_weight in graph[current_node]:
+			distance_via_current = current_distance + edge_weight
+
+			if distance_via_current > shortest_distance[neighbor_node]:
+				continue
+			
+			shortest_distance[neighbor_node] = distance_via_current
+			heapq.heappush(frontier, (distance_via_current, neighbor_node))
+
+	return shortest_distance
 
 
 # Whenever there are two types of data -> think greedy algorithm.
