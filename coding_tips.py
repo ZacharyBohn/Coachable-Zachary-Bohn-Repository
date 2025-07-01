@@ -63,6 +63,24 @@ LETTERS = set(string.ascii_letters)
 PUNCTUATIONS = set(string.punctuation)
 WHITESPACES = set(string.whitespace)
 
+# Cypher / encryption style problems.
+#
+# Use these 3 steps to keep ints between a - z
+# or between A - Z
+# -Bring down to base 0
+# -Perform modulo
+# -Bring back up to base ord('a'), ie 97
+# in implementation this is
+# value = ord(char) - ord('a')
+# value %= 26
+# new_char = chr(value + ord('a'))
+#
+# ord('a') = 97
+# the next 25 lowercase letters follow
+#
+# ord('A') = 65
+# the next 25 uppercase letters follow
+
 # Sorting
 def quick_sort():
 	pass
