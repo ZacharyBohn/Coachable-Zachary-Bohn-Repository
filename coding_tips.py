@@ -6,19 +6,27 @@ it effortlessly and implement under pressure and on the
 clock.
 '''
 
-def binary_search(arr, target):
-	# right is len(arr) - 1 because
-	# it is inclusive. Writing this way keeps the
-	# code slightly clearer below
-	left, right = 0, len(arr) - 1
-	while left <= right:
-		mid = left ((right - left) // 2)
-		if arr[mid] == target:
-			return mid
-		elif arr[mid] < target:
-			left = mid + 1
-		elif arr[mid] > target:
-			right = mid - 1
+def binary_search(arr: List[int], target: int) -> int:
+	lo, hi = 0, len(arr) - 1
+	while lo <= hi:
+		# this line always stays the same
+		# regardless if you are running
+		# bisect left or bisect right
+		mid = (lo + hi) // 2
+		# optional: if dups don't matter
+		#if arr[mid] == target:
+		#	return mid
+		#
+		# optional: if you want to bisect right
+		#if target < arr[mid]:
+		if arr[mid] < target:
+			# mneumonic device:
+			# since we are adjusting "lo" in the
+			# if statement, this algorithm will return
+			# the lowest value of all dups.
+			lo = mid + 1
+		else:
+			hi = mid - 1
 	return -1
 
 # Index Edges
