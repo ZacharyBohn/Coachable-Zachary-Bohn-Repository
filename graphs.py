@@ -202,3 +202,26 @@ def slidingwindow(arr):
     
     # right pointer processing part 2
     
+
+'''
+
+stack = [root]
+visited = set()
+while stack:
+	node = stack[-1]
+
+	# proc
+	if node is target:
+		return stack
+
+	if node.left and left not in visited:
+		stack.append(node.left)
+	if node.right and right not in visited:
+		stack.append(node.right)
+	
+	if node is stack[-1]:
+		stack.pop()
+		visited.add(node)
+	
+
+'''
