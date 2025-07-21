@@ -1,94 +1,119 @@
-from typing import List, Optional
+# Updated Code
+
+# nit: changed to tabs for indentation
+
 from collections import deque
 
-class TreeNode:
-    def __init__(self, val: Optional[int]):
-        self.val = val
-        self.left = None
-        self.right = None
+# Changed class name to PascalCase
+# and changed name from NetworkNode -> Node
+class Node:
+	def __init__(self, type: str, value: int):
+		self.type = type
+		self.value = value
 
-def build_tree(arr: List[Optional[int]]) -> Optional[TreeNode]:
-    """Build binary tree from level-order array."""
-    if not arr or arr[0] is None:
-        return None
+# Added to make it very clear what the row, column tuple is
+class GridCoordinate:
+	def __init__(self, row: int, col: int):
+		self.row = row
+		self.col = col
+	
+	# This will simplify some syntax below
+	def __add__(self, other) -> GridCoordinate:
+		if not isInstance(other, GridCoordinate):
+			raise Exception(f'Can\'t add GridCoordinate with {type(other)}')
+		return GridCoordinate(self.row + other.row, self.col + other.col)
 
-    root = TreeNode(arr[0])
-    queue = deque([root])
-    index = 1
+def check_connected(grid: List[List[Node]], max_diff: int) -> bool:
+	# Add sizes of the grid as constants for enhanced readability
+	ROWS, COLS = len(grid), len(grid[0])
 
-    while queue and index < len(arr):
-        node = queue.popleft()
+	# Changed to visited
+	# should follow typical conventions unless there is a
+	# good reason to deviate
+	visited = set()
 
-        # Left child
-        if index < len(arr) and arr[index] is not None:
-            node.left = TreeNode(arr[index])
-            queue.append(node.left)
-        index += 1
+	# Created start / end coord for enhanced readability
+	start_coord, end_coord = GridCoordinate(0, 0), GridCoordinate(ROWS-1, COLS-1)
 
-        # Right child
-        if index < len(arr) and arr[index] is not None:
-            node.right = TreeNode(arr[index])
-            queue.append(node.right)
-        index += 1
+	# Changed to a deque
+	# 4 things are wrong here
+	# 1. It was named Q even though it was a stack
+	# 2. A BFS is better for finding paths since it has more
+	#	predictable performance
+	# 3. Didn't follow naming conventions or styling. Changed to coord_queue
+	#	since we are storing grid coord location, not nodes
+	# 4. nit: should add a comment here to specify what is in the queue or
+	#	create a class to specify this. I opted to create a class GridCoordinate
+	#	this also let's us create a start and end node
+	coord_queue = deque([GridCoordinate(0,0)])
 
-    return root
+	# nit: can just check if queue is not empty using below syntax
+	while coord_queue:
+		# Changed to popleft since we are now using BFS
+		# Changed to coord
+		coord = coord_queue.popleft()
 
-def get_tree_levels(root: TreeNode):
-    """Return list of levels with TreeNode values (including None placeholders)."""
-    levels = []
-    queue = deque([(root, 0)])
+		# Added this here for readability / to remove
+		# duplicate code below
+		node = get_node(coord, grid)
 
-    while queue:
-        node, level = queue.popleft()
-        if level == len(levels):
-            levels.append([])
 
-        levels[level].append(node.val if node else None)
+		# It is pointless to deconstruct a coord, just to reconstruct it
+		# All following instances of this will be changed without comment.
+		#
+		# Should prefer guard clauses to deep nesting
+		#
+		# nit: Don't need to check visited here for BFS.
+		# Prefer to check for visited / add to visited
+		# during neighbor traversal.
 
-        if node:
-            queue.append((node.left, level + 1))
-            queue.append((node.right, level + 1))
-        else:
-            # To maintain structure, add placeholders even if node is None
-            queue.append((None, level + 1))
-            queue.append((None, level + 1))
+		# Changed to use end_coord
+		if coord == end_coord:
+			return True
 
-        # Stop if the current level is entirely None
-        if all(val is None for val in levels[-1]):
-            levels.pop()
-            break
+		# I believe there are several dormant bugs here in how
+		# boundaries are being tested. The code is functional,
+		# but confused. I moving this logic to a helper function
+		# and cleaned it up.
+		#
+		# These if blocks are duplicating a lot of logic.
+		# If instead of re-applying the valid neighbor logic
+		# to every potential neighbor, potential neighbors
+		# should be generated, and checked in a loop.
+		# I've made this change below.
+		#
+		# Also, lots of naming styling wasn't followed, that's been updated.
+		#
+		# The code was also generally confusing to reason about, this
+		# has been updated as well.
+		for neighbor_coord in get_neighbors(coord, ROWS, COLS):
+			neighbor = get_node(neighbor_coord)
+			if neighbor_coord in visited:
+				continue
+			if (node.type == neighbor.type or
+				abs(node.value - neighbor.value) <= max_diff):
+				coord_queue.append(neighbor_coord)
+				visited.add(neighbor_coord)
 
-    return levels
+	# Removed needless check for end node here
 
-def print_ascii_tree(root: Optional[TreeNode]):
-    """Prints tree in ASCII art format."""
-    if not root:
-        print("<empty tree>")
-        return
+	return False
 
-    levels = get_tree_levels(root)
-    max_width = 2 ** (len(levels)) * 4  # adjust 4 for spacing
+def get_node(coord: GridCoordinate, grid: List[List[Node]]) -> Node:
+	return grid[coord.row][coord.col]
 
-    for i, level in enumerate(levels):
-        level_str = ""
-        spacer = max_width // (2 ** (i + 1))
-        for val in level:
-            if val is None:
-                level_str += " " * spacer + " " + " " * spacer
-            else:
-                level_str += " " * spacer + f"{val}" + " " * spacer
-        print(level_str.center(max_width))
+def is_coord_in_bounds(coord: GridCoordinate, ROWS: int, COLS: int) -> bool:
+	return 0 <= coord.row < ROWS and 0 <= coord.col < COLS
 
-        # Print branches
-        if i < len(levels) - 1:
-            branch_str = ""
-            for j in range(len(level)):
-                left_branch = "/" if levels[i + 1][2 * j] is not None else " "
-                right_branch = "\\" if levels[i + 1][2 * j + 1] is not None else " "
-                branch_str += " " * (spacer - 1) + left_branch + " " + right_branch + " " * (spacer - 1)
-            print(branch_str.center(max_width))
-
-# Example usage:
-arr = [31,30,48,3,None,38,49,0,16,35,47,None,None,None,2,15,27,33,37,39,None,1,None,5,None,22,28,32,34,36,None,None,43,None,None,4,11,19,23,None,29,None,None,None,None,None,None,40,46,None,None,7,14,17,21,None,26,None,None,None,41,44,None,6,10,13,None,None,18,20,None,25,None,None,42,None,45,None,None,8,None,12,None,None,None,None,None,24,None,None,None,None,None,None,9]
-root = build_tree(arr)
-print_ascii_tree(root)
+def get_neighbors(coord: GridCoordinate, ROWS: int, COLS: int) -> List[GridCoordinate]:
+	'''
+	Generates all neighbors of coord within the bounds of ROWS, COLS
+	'''
+	directions = [GridCoordinate(-1, 0), GridCoordinate(1, 0), GridCoordinate(0, -1), GridCoordinate(0, 1)]
+	neighbors = []
+	for delta in directions:
+		neighbor = coord + delta
+		if is_coord_in_bounds(coord, ROWS, COLS):
+			neighbors.append(neighbor)
+	return neighbors
+			
