@@ -144,19 +144,33 @@ def dfs_postorder(adj, node=adj.keys()[0], visited, top_order):
 	top_order.append(node)
 	visited.add(node)
 
-
+'''
+- Count _unique_ dependencies in preprocessing. Use a defaultdict
+	for this.
+- Start with nodes that have 0 dependencies
+	this will be starting nodes for BFS.
+- For each neighbor of a node with no dependencies
+	decrement that neighbors dependencies by 1
+	(note that you may need to build a reverse adj
+	list if the graph is directed)
+- When a node's dependencies goes to 0, add to the top_order
+'''
 def top_sort2(adj):
-	q = deque([adj.keys()[0]])
-	visited = set()
+	top_order = []
 
 	#preprocess indegree list
 	indegree = defaultdict(int)
 	for src, neighbors in adj.items():
-	for nei in neighbors:
-		indegree[nei] += 1 
-
-	top_order = []
-
+		for nei in neighbors:
+			indegree[nei] += 1
+	
+	# gather starting nodes
+	for node in indegrees:
+		if indegress[node] == 0:
+			top_order.append(node)
+	
+	q = deque(top_order)
+	visited = set()
 	while q:
 		# evaluation
 		node = q.popleft()
@@ -168,10 +182,10 @@ def top_sort2(adj):
 		# Traversal
 		for neighbor in adj[node]:
 			if neighbor in visited:
-			continue
+				continue
 			if indegree[neighbor] > 0:
-			indegree[neighbor] -= 1
-			continue
+				indegree[neighbor] -= 1
+				continue
 			q.append(neighbor)
 
 	return top_order
