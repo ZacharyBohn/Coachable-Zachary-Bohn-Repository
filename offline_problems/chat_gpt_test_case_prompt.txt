@@ -1,0 +1,3 @@
+Please write 5 test cases in a single python file for the following problem. They should all run when the python file is run, and should create the Solution class and call the correct function based on the leetcode definition. Each of the test cases should be in a class called TestCases. Use the unittest package to generate tests. Do not include the solution, just the solution class. Do not say anything other just just the test cases code.
+
+Problem: 

@@ -18,7 +18,7 @@ def binary_search(arr: List[int], target: int) -> int:
 		#	return mid
 		#
 		# optional: if you want to bisect right
-		#if target < arr[mid]:
+		# if arr[mid] <= target:
 		if arr[mid] < target:
 			# mneumonic device:
 			# since we are adjusting "lo" in the
